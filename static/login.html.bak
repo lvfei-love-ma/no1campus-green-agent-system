@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>登录 - RAG 智能问答</title>
+  <link rel="stylesheet" href="lib/element.css" />
+  <style>
+    html, body { margin: 0; height: 100%; font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    #app { height: 100%; }
+    .login-wrapper { height: 100%; display: flex; align-items: center; justify-content: center; }
+    .login-card { width: 400px; padding: 30px 36px 12px; border-radius: 12px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25); }
+    .login-title { text-align: center; margin: 6px 0 4px; font-size: 24px; font-weight: 600; color: #303133; }
+    .login-subtitle { text-align: center; margin: 0 0 28px; font-size: 13px; color: #909399; }
+    .vcode-btn { white-space: nowrap; padding: 0 4px; }
+    .login-btn { width: 100%; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="login-wrapper">
+      <el-card class="login-card" shadow="always">
+        <div slot="header" style="border:none;padding:0;">
+          <div class="login-title">RAG 智能问答</div>
+          <div class="login-subtitle">邮箱验证码登录</div>
+        </div>
+        <el-form :model="form" :rules="rules" ref="loginForm" @submit.native.prevent>
+          <el-form-item prop="email">
+            <el-input v-model="form.email" prefix-icon="el-icon-message" placeholder="请输入邮箱地址" clearable maxlength="64"></el-input>
+          </el-form-item>
+          <el-form-item prop="vcode">
+            <el-input v-model="form.vcode" prefix-icon="el-icon-key" placeholder="请输入验证码" maxlength="6" oninput="value=value.replace(/[^\d]/g,'')">
+              <el-button slot="append" type="text" class="vcode-btn" :disabled="countdown > 0 || sendingCode" :loading="sendingCode" @click="sendVcode">{{ countdown > 0 ? countdown + 's 后重发' : '获取验证码' }}</el-button>
+            </el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" class="login-btn" :loading="logging" @click="login">登 录</el-button>
+          </el-form-item>
+        </el-form>
+      </el-card>
+    </div>
+  </div>
+  <script src="lib/vue.min.js"></script>
+  <script src="lib/element.js"></script>
+  <script src="lib/axios.min.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data() {
+        return {
+          form: { email: '', vcode: '' },
+          rules: {
+            email: [
+              { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+              { type: 'email', message: '邮箱格式不正确', trigger: ['blur', 'change'] }
+            ],
+            vcode: [
+              { required: true, message: '请输入验证码', trigger: 'blur' },
+              { pattern: /^\d{4,6}$/, message: '验证码为4-6位数字', trigger: 'blur' }
+            ]
+          },
+          sendingCode: false,
+          logging: false,
+          countdown: 0,
+          timer: null
+        };
+      },
+      beforeDestroy() { if (this.timer) clearInterval(this.timer); },
+      methods: {
+        async sendVcode() {
+          const valid = await this.validateField('email');
+          if (!valid) return;
+          this.sendingCode = true;
+          try {
+            const res = await axios.get('/api/auth/vcode', { params: { email: this.form.email.trim() } });
+            if (res.data && res.data.code === 200) {
+              this.$message.success(res.data.msg || '验证码已发送，请查收邮箱');
+              this.startCountdown();
+            } else {
+              this.$message.error((res.data && res.data.msg) || '发送验证码失败');
+            }
+          } catch (err) {
+            this.$message.error('发送验证码失败：' + this.fmtError(err));
+          } finally {
+            this.sendingCode = false;
+          }
+        },
+        startCountdown() {
+          this.countdown = 60;
+          this.timer = setInterval(() => {
+            this.countdown -= 1;
+            if (this.countdown <= 0) clearInterval(this.timer);
+          }, 1000);
+        },
+        login() {
+          this.$refs.loginForm.validate(async (valid) => {
+            if (!valid) return;
+            this.logging = true;
+            try {
+              const res = await axios.post('/api/auth/login', {
+                email: this.form.email.trim(),
+                vcode: this.form.vcode.trim()
+              });
+              if (res.data && res.data.code === 200) {
+                this.$message.success(res.data.msg || '登录成功');
+                localStorage.setItem('rag_user', this.form.email.trim());
+                setTimeout(() => { window.location.href = 'chat.html'; }, 400);
+              } else {
+                this.$message.error((res.data && res.data.msg) || '登录失败');
+              }
+            } catch (err) {
+              this.$message.error('登录失败：' + this.fmtError(err));
+            } finally {
+              this.logging = false;
+            }
+          });
+        },
+        validateField(field) {
+          return new Promise((resolve) => {
+            this.$refs.loginForm.validateField(field, (errMsg) => resolve(!errMsg));
+          });
+        },
+        fmtError(err) {
+          if (err.response && err.response.data && err.response.data.msg) return err.response.data.msg;
+          return err.message || '网络异常';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

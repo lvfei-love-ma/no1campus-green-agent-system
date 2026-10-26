@@ -1,0 +1,21 @@
+# 本地环境与运行产物
+.env
+.env.local
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.log
+
+# 数据与索引（体积大 / 含个人会话数据，不入库）
+data/
+faiss-index/
+
+# IDE
+.idea/
+.vscode/
+
+# 旧版页面备份（保留在本地，不随新版本发布）
+static/legacy/

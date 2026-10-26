@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#16856B" />
+  <title>绿知助手 · 绿色校园与低碳生活知识问答</title>
+  <link rel="stylesheet" href="/static/assets/app.css?v=5" />
+</head>
+<body>
+  <div class="app" id="app">
+    <!-- 会话侧栏 -->
+    <aside class="sidebar" id="sidebar" aria-label="历史会话">
+      <div class="sidebar-head">
+        <a class="brand" href="/chat" aria-label="绿知助手首页">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 21c5-2.5 8-6.5 8-12V4c-5 0-9 1.5-11 5s-1 8 3 12z" />
+              <path d="M12 21c0-4 1-8 5-11" />
+            </svg>
+          </span>
+          <span class="brand-name">绿知助手</span>
+        </a>
+        <button class="icon-btn sidebar-close" id="sidebarClose" type="button" aria-label="收起会话栏">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+
+      <button class="new-chat" id="newChatBtn" type="button">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        新建对话
+      </button>
+
+      <label class="search" for="searchInput">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="searchInput" type="search" placeholder="搜索历史对话" autocomplete="off" aria-label="搜索历史对话" />
+      </label>
+
+      <nav class="conv-list" id="convList" aria-label="会话列表">
+        <p class="list-empty" id="listEmpty">正在加载…</p>
+      </nav>
+
+      <div class="sidebar-foot">
+        <div class="account">
+          <span class="avatar" id="avatar" aria-hidden="true">绿</span>
+          <span class="account-meta">
+            <span class="account-name" id="accountName">未登录</span>
+            <span class="account-mail" id="accountMail"></span>
+          </span>
+        </div>
+        <button class="icon-btn" id="logoutBtn" type="button" aria-label="退出登录" title="退出登录">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4h3a2 2 0 012 2v12a2 2 0 01-2 2h-3"/><path d="M10 8l-4 4 4 4M6 12h9"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <div class="overlay" id="overlay" hidden></div>
+
+    <!-- 主聊天区 -->
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="打开会话列表">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <div class="title-wrap">
+          <h1 id="convTitle">新对话</h1>
+        </div>
+        <div class="topbar-actions">
+          <button class="ghost-btn" id="clearMemoryBtn" type="button" aria-label="清空当前会话的记忆，历史消息保留" title="清空当前会话的记忆，历史消息保留">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg>
+            清空记忆
+          </button>
+        </div>
+      </header>
+
+      <div class="chat-scroll" id="chatScroll">
+        <div class="thread">
+          <section class="welcome" id="welcome">
+            <span class="welcome-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 21c5-2.5 8-6.5 8-12V4c-5 0-9 1.5-11 5s-1 8 3 12z"/><path d="M12 21c0-4 1-8 5-11"/>
+              </svg>
+            </span>
+            <h2>你好，我是绿知助手</h2>
+            <p>问我一个具体场景，我会给出可以马上照做的做法，并附上资料来源。</p>
+            <div class="suggestions" id="suggestions">
+              <button type="button" data-q="宿舍空调开到多少度比较省电？">宿舍空调开到多少度比较省电？</button>
+              <button type="button" data-q="废电池、过期药品应该扔到哪里？">废电池、过期药品应该扔到哪里？</button>
+              <button type="button" data-q="快递纸箱和塑料瓶怎么回收更方便？">快递纸箱和塑料瓶怎么回收更方便？</button>
+              <button type="button" data-q="校园里怎么参与低碳行动？">校园里怎么参与低碳行动？</button>
+            </div>
+          </section>
+
+          <div class="messages" id="messages" aria-live="polite"></div>
+
+          <div class="typing" id="typing" hidden>
+            <span class="typing-text" id="typingText">正在查找知识库…</span>
+            <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          </div>
+        </div>
+      </div>
+
+      <footer class="composer-wrap">
+        <form class="composer" id="composer" autocomplete="off">
+          <label class="sr-only" for="input">输入你的问题</label>
+          <textarea id="input" rows="1" maxlength="2000" placeholder="问问绿色校园与低碳生活…" aria-describedby="composerHint"></textarea>
+          <button class="send-btn" id="sendBtn" type="submit" aria-label="发送问题" title="发送">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>
+          </button>
+          <button class="stop-btn" id="stopBtn" type="button" aria-label="停止生成" title="停止生成" hidden>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+          </button>
+        </form>
+        <p class="composer-hint" id="composerHint">Enter 发送 · Shift+Enter 换行</p>
+      </footer>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <!-- 通用确认框 -->
+  <div class="modal" id="modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h3 id="modalTitle">确认操作</h3>
+      <p id="modalText"></p>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="modalCancel" type="button">取消</button>
+        <button class="btn-primary" id="modalConfirm" type="button">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/lib/marked.min.js"></script>
+  <script src="/static/assets/app.js?v=5"></script>
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#16856B" />
+  <title>登录 · 绿知助手</title>
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --surface: #ffffff;
+      --text: #1f2a30;
+      --text-2: #55636d;
+      --muted: #8a949c;
+      --border: #e5e8ec;
+      --border-strong: #d8dde3;
+      --primary: #16856b;
+      --primary-dark: #0f6e58;
+      --primary-soft: #e9f4f0;
+      --danger: #b9433d;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .wrap { width: min(420px, 100%); }
+    .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+    .mark {
+      display: grid; place-items: center;
+      width: 38px; height: 38px;
+      border-radius: 11px;
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+    .brand-name { font-size: 17px; font-weight: 650; }
+    .brand-tag { margin-left: auto; font-size: 12px; color: var(--muted); }
+    .card {
+      padding: 26px 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 1px 2px rgba(16,24,40,.04), 0 12px 32px rgba(16,24,40,.06);
+    }
+    h1 { margin: 0 0 6px; font-size: 22px; font-weight: 650; }
+    .sub { margin: 0 0 20px; color: var(--text-2); font-size: 13.5px; }
+    label { display: block; margin: 0 0 6px; font-size: 13px; color: var(--text-2); font-weight: 550; }
+    .field { margin-bottom: 14px; }
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+      outline: 0;
+    }
+    input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(22,133,107,.12); }
+    .code-row { display: flex; gap: 8px; }
+    .code-row input { flex: 1; }
+    .code-btn {
+      flex: 0 0 auto;
+      padding: 0 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--primary-dark);
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .code-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-soft); }
+    .code-btn:disabled { color: var(--muted); cursor: not-allowed; }
+    .submit {
+      width: 100%;
+      margin-top: 6px;
+      padding: 11px 14px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .submit:hover:not(:disabled) { background: var(--primary-dark); }
+    .submit:disabled { background: #c8d3d0; cursor: not-allowed; }
+    .alert {
+      margin: 0 0 14px;
+      padding: 9px 12px;
+      border-radius: 9px;
+      background: #fdeceb;
+      color: var(--danger);
+      font-size: 13px;
+    }
+    .alert[hidden], [hidden] { display: none !important; }
+    .divider { display: flex; align-items: center; gap: 10px; margin: 20px 0 14px; color: var(--muted); font-size: 12px; }
+    .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+    .demo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .demo-btn {
+      padding: 9px 12px;
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--text-2);
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .demo-btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary-dark); background: var(--primary-soft); }
+    .demo-btn:disabled { color: var(--muted); cursor: not-allowed; }
+    .foot { margin: 14px 2px 0; font-size: 12px; color: var(--muted); line-height: 1.7; }
+    .foot a { color: var(--primary-dark); text-decoration: none; }
+    .foot a:hover { text-decoration: underline; }
+    @media (max-width: 420px) { .card { padding: 22px 18px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 21c5-2.5 8-6.5 8-12V4c-5 0-9 1.5-11 5s-1 8 3 12z"/><path d="M12 21c0-4 1-8 5-11"/>
+        </svg>
+      </span>
+      <span class="brand-name">绿知助手</span>
+    </div>
+
+    <main class="card">
+      <h1>登录</h1>
+
+      <p class="alert" id="alert" hidden role="alert"></p>
+
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="email">邮箱</label>
+          <input id="email" type="email" inputmode="email" autocomplete="username" placeholder="you@qq.com" required />
+        </div>
+        <div class="field">
+          <label for="vcode">验证码</label>
+          <div class="code-row">
+            <input id="vcode" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="6 位数字" maxlength="6" required />
+            <button class="code-btn" id="codeBtn" type="button" aria-label="获取邮箱验证码">获取验证码</button>
+          </div>
+        </div>
+        <button class="submit" id="loginBtn" type="submit">登录</button>
+      </form>
+
+      <div class="divider" id="demoDivider">或使用演示账号</div>
+      <div class="demo-row" id="demoRow">
+        <button class="demo-btn" type="button" data-account="A" aria-label="使用演示账号 A 登录">演示账号 A</button>
+        <button class="demo-btn" type="button" data-account="B" aria-label="使用演示账号 B 登录">演示账号 B</button>
+      </div>
+
+      <p class="foot" id="footNote">
+        验证码 5 分钟内有效，请勿泄露给他人。<br />
+        登录遇到问题，请联系课程管理员。
+      </p>
+    </main>
+  </div>
+
+  <script>
+    (() => {
+      const $ = (id) => document.getElementById(id);
+      const alertBox = $('alert');
+      const form = $('loginForm');
+      const emailInput = $('email');
+      const vcodeInput = $('vcode');
+      const codeBtn = $('codeBtn');
+      const loginBtn = $('loginBtn');
+      const demoRow = $('demoRow');
+      const demoDivider = $('demoDivider');
+      let countdown = 0;
+      let timer = null;
+
+      const nextUrl = (() => {
+        const next = new URLSearchParams(location.search).get('next');
+        return next && next.startsWith('/') ? next : '/chat';
+      })();
+
+      function showError(message) {
+        alertBox.textContent = message;
+        alertBox.hidden = !message;
+      }
+
+      async function request(path, options = {}) {
+        const init = { credentials: 'same-origin', ...options };
+        if (init.body) {
+          init.headers = { 'Content-Type': 'application/json' };
+          init.body = JSON.stringify(init.body);
+        }
+        const res = await fetch(path, init);
+        let payload = null;
+        try { payload = await res.json(); } catch (err) { payload = null; }
+        if (!res.ok) throw new Error((payload && payload.msg) || `请求失败（${res.status}）`);
+        return payload;
+      }
+
+      function startCountdown(seconds = 60) {
+        countdown = seconds;
+        codeBtn.disabled = true;
+        codeBtn.textContent = `${countdown}s 后重发`;
+        clearInterval(timer);
+        timer = setInterval(() => {
+          countdown -= 1;
+          if (countdown <= 0) {
+            clearInterval(timer);
+            codeBtn.disabled = false;
+            codeBtn.textContent = '获取验证码';
+          } else {
+            codeBtn.textContent = `${countdown}s 后重发`;
+          }
+        }, 1000);
+      }
+
+      async function sendCode() {
+        showError('');
+        const email = emailInput.value.trim();
+        if (!email) {
+          showError('请先填写邮箱');
+          emailInput.focus();
+          return;
+        }
+        codeBtn.disabled = true;
+        codeBtn.textContent = '发送中…';
+        try {
+          await request(`/api/auth/vcode?email=${encodeURIComponent(email)}`);
+          startCountdown(60);
+          vcodeInput.focus();
+        } catch (err) {
+          showError(err.message);
+          codeBtn.disabled = false;
+          codeBtn.textContent = '获取验证码';
+        }
+      }
+
+      async function login(event) {
+        event.preventDefault();
+        showError('');
+        const email = emailInput.value.trim();
+        const vcode = vcodeInput.value.trim();
+        if (!email || !vcode) {
+          showError('请填写邮箱和验证码');
+          return;
+        }
+        loginBtn.disabled = true;
+        loginBtn.textContent = '登录中…';
+        try {
+          await request('/api/auth/login', { method: 'POST', body: { email, vcode } });
+          location.replace(nextUrl);
+        } catch (err) {
+          showError(err.message);
+          loginBtn.disabled = false;
+          loginBtn.textContent = '登录';
+        }
+      }
+
+      async function demoLogin(account) {
+        showError('');
+        const buttons = demoRow.querySelectorAll('button');
+        buttons.forEach((btn) => { btn.disabled = true; });
+        try {
+          await request('/api/auth/demo-login', { method: 'POST', body: { account } });
+          location.replace(nextUrl);
+        } catch (err) {
+          showError(err.message);
+          buttons.forEach((btn) => { btn.disabled = false; });
+        }
+      }
+
+      codeBtn.addEventListener('click', sendCode);
+      form.addEventListener('submit', login);
+      demoRow.addEventListener('click', (event) => {
+        const button = event.target.closest('button[data-account]');
+        if (button) demoLogin(button.dataset.account);
+      });
+
+      // 已登录则直接进入聊天页；同时根据服务端配置决定是否显示演示账号
+      (async () => {
+        try {
+          const me = await fetch('/api/auth/me', { credentials: 'same-origin' });
+          if (me.ok) {
+            location.replace(nextUrl);
+            return;
+          }
+        } catch (err) { /* 离线时留在登录页 */ }
+
+        try {
+          const res = await fetch('/api/auth/status', { credentials: 'same-origin' });
+          const payload = await res.json();
+          const data = payload.data || {};
+          if (!data.demo_login_enabled) {
+            demoRow.hidden = true;
+            demoDivider.hidden = true;
+          }
+          if (data.redis_ok === false) {
+            showError('验证码服务暂不可用（Redis 未连接），可以使用演示账号或联系管理员。');
+          }
+          if (data.knowledge_title) {
+            document.title = `登录 · ${data.knowledge_title}`;
+          }
+        } catch (err) { /* 忽略状态查询失败 */ }
+      })();
+    })();
+  </script>
+</body>
+</html>
